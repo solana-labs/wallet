@@ -1,7 +1,5 @@
 import {
     SendTransactionOptions,
-    SignerWalletAdapter,
-    WalletAdapter,
     WalletError,
     WalletNotConnectedError,
     WalletNotReadyError,
@@ -30,7 +28,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
 }) => {
     const [name, setName] = useLocalStorage<WalletName | null>(localStorageKey, null);
     const [wallet, setWallet] = useState<Wallet>();
-    const [adapter, setAdapter] = useState<WalletAdapter | SignerWalletAdapter>();
+    const [adapter, setAdapter] = useState<ReturnType<Wallet['adapter']>>();
     const [ready, setReady] = useState(false);
     const [connecting, setConnecting] = useState(false);
     const [disconnecting, setDisconnecting] = useState(false);
@@ -139,7 +137,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     const signTransaction = useMemo(
         () =>
             adapter && 'signTransaction' in adapter
-                ? async (transaction: Transaction) => {
+                ? async (transaction: Transaction): Promise<Transaction> => {
                       if (!connected) {
                           const error = new WalletNotConnectedError();
                           onError(error);
@@ -155,7 +153,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
     const signAllTransactions = useMemo(
         () =>
             adapter && 'signAllTransactions' in adapter
-                ? async (transactions: Transaction[]) => {
+                ? async (transactions: Transaction[]): Promise<Transaction[]> => {
                       if (!connected) {
                           const error = new WalletNotConnectedError();
                           onError(error);
@@ -163,6 +161,22 @@ export const WalletProvider: FC<WalletProviderProps> = ({
                       }
 
                       return await adapter.signAllTransactions(transactions);
+                  }
+                : undefined,
+        [adapter, onError, connected]
+    );
+
+    const signMessage = useMemo(
+        () =>
+            adapter && 'signMessage' in adapter
+                ? async (message: Uint8Array | string): Promise<string> => {
+                      if (!connected) {
+                          const error = new WalletNotConnectedError();
+                          onError(error);
+                          throw error;
+                      }
+
+                      return await adapter.signMessage(message);
                   }
                 : undefined,
         [adapter, onError, connected]
@@ -203,7 +217,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
                 setConnecting(true);
                 try {
                     await adapter.connect();
-                } catch (error) {
+                } catch (error: any) {
                     // Don't throw error, but onError will still be called
                 } finally {
                     setConnecting(false);
@@ -231,6 +245,7 @@ export const WalletProvider: FC<WalletProviderProps> = ({
                 sendTransaction,
                 signTransaction,
                 signAllTransactions,
+                signMessage,
             }}
         >
             {children}
