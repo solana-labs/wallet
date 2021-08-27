@@ -14,6 +14,13 @@ import {
     WalletDisconnectButton as MaterialUIWalletDisconnectButton,
     WalletMultiButton as MaterialUIWalletMultiButton,
 } from '@solana/wallet-adapter-material-ui';
+import {
+    WalletConnectButton as UIWalletConnectButton,
+    WalletModalButton as UIWalletModalButton,
+    WalletModalProvider as UIWalletModalProvider,
+    WalletDisconnectButton as UIWalletDisconnectButton,
+    WalletMultiButton as UIWalletMultiButton,
+} from '@solana/wallet-adapter-ui';
 import { ConnectionProvider, useLocalStorage, WalletProvider } from '@solana/wallet-adapter-react';
 import {
     getBitpieWallet,
@@ -70,82 +77,100 @@ export const Demo: FC = () => {
             <WalletProvider wallets={wallets} onError={onError} autoConnect={autoConnect}>
                 <MaterialUIWalletDialogProvider>
                     <AntDesignWalletModalProvider>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell width={200}>Component</TableCell>
-                                    <TableCell width={200}>Material UI</TableCell>
-                                    <TableCell width={200}>Ant Design</TableCell>
-                                    <TableCell>Example v{version}</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                <TableRow>
-                                    <TableCell>Connect Button</TableCell>
-                                    <TableCell>
-                                        <MaterialUIWalletConnectButton />
-                                    </TableCell>
-                                    <TableCell>
-                                        <AntDesignWalletConnectButton />
-                                    </TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Disconnect Button</TableCell>
-                                    <TableCell>
-                                        <MaterialUIWalletDisconnectButton />
-                                    </TableCell>
-                                    <TableCell>
-                                        <AntDesignWalletDisconnectButton />
-                                    </TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Dialog/Modal Button</TableCell>
-                                    <TableCell>
-                                        <MaterialUIWalletDialogButton />
-                                    </TableCell>
-                                    <TableCell>
-                                        <AntDesignWalletModalButton />
-                                    </TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell>Multi Button</TableCell>
-                                    <TableCell>
-                                        <MaterialUIWalletMultiButton />
-                                    </TableCell>
-                                    <TableCell>
-                                        <AntDesignWalletMultiButton />
-                                    </TableCell>
-                                    <TableCell></TableCell>
-                                </TableRow>
-                                <TableRow>
-                                    <TableCell></TableCell>
-                                    <TableCell>
-                                        <Tooltip title="Only runs if the wallet is ready to connect" placement="left">
-                                            <FormControlLabel
-                                                control={
-                                                    <Switch
-                                                        name="autoConnect"
-                                                        color="secondary"
-                                                        checked={autoConnect}
-                                                        onChange={(event, checked) => setAutoConnect(checked)}
-                                                    />
-                                                }
-                                                label="AutoConnect"
-                                            />
-                                        </Tooltip>
-                                    </TableCell>
-                                    <TableCell>
-                                        <RequestAirdrop />
-                                    </TableCell>
-                                    <TableCell>
-                                        <SendTransaction />
-                                    </TableCell>
-                                </TableRow>
-                            </TableBody>
-                        </Table>
+                        <UIWalletModalProvider>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell width={240}>Component</TableCell>
+                                        <TableCell width={240}>Material UI</TableCell>
+                                        <TableCell width={240}>Ant Design</TableCell>
+                                        <TableCell width={240}>Phantom</TableCell>
+                                        <TableCell>Example v{version}</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>Connect Button</TableCell>
+                                        <TableCell>
+                                            <MaterialUIWalletConnectButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <AntDesignWalletConnectButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <UIWalletConnectButton />
+                                        </TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Disconnect Button</TableCell>
+                                        <TableCell>
+                                            <MaterialUIWalletDisconnectButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <AntDesignWalletDisconnectButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <UIWalletDisconnectButton />
+                                        </TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Dialog/Modal Button</TableCell>
+                                        <TableCell>
+                                            <MaterialUIWalletDialogButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <AntDesignWalletModalButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <UIWalletModalButton />
+                                        </TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell>Multi Button</TableCell>
+                                        <TableCell>
+                                            <MaterialUIWalletMultiButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <AntDesignWalletMultiButton />
+                                        </TableCell>
+                                        <TableCell>
+                                            <UIWalletMultiButton />
+                                        </TableCell>
+                                        <TableCell></TableCell>
+                                    </TableRow>
+                                    <TableRow>
+                                        <TableCell></TableCell>
+                                        <TableCell colSpan={3}>
+                                            <Tooltip
+                                                title="Only runs if the wallet is ready to connect"
+                                                placement="left"
+                                            >
+                                                <FormControlLabel
+                                                    control={
+                                                        <Switch
+                                                            name="autoConnect"
+                                                            color="primary"
+                                                            checked={autoConnect}
+                                                            onChange={(event, checked) => setAutoConnect(checked)}
+                                                        />
+                                                    }
+                                                    label="AutoConnect"
+                                                />
+                                            </Tooltip>
+                                        </TableCell>
+                                        <TableCell>
+                                            <RequestAirdrop />
+                                        </TableCell>
+                                        <TableCell>
+                                            <SendTransaction />
+                                        </TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </UIWalletModalProvider>
                     </AntDesignWalletModalProvider>
                 </MaterialUIWalletDialogProvider>
             </WalletProvider>
